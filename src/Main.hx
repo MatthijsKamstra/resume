@@ -55,7 +55,7 @@ class Main {
 				case '-help', '-h':
 					showHelp();
 				case '-out', '-o':
-					writeOut();
+					writeAll();
 				default:
 					trace("case '" + temp + "': trace ('" + temp + "');");
 			}
