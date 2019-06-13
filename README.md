@@ -18,6 +18,7 @@ Language that I cover (with Haxe):
 - neko
 - lua
 
+This is a [Haxe](http://www.haxe.org) project, read more about it in the [README_HAXE.MD](README_HAXE.MD)!
 
 # About resume.json
 
@@ -55,3 +56,14 @@ We have an `.json` example, so you should check that out as well.
 
 - [About json example](../08json/about.md)
 - [The json example](../08json/example.md)
+
+# Haxe project
+
+This is an example Haxe project scaffolded by Visual Studio Code.
+
+Without further changes the structure is following:
+
+ * `src/Main.hx`: Entry point Haxe source file
+ * `build.hxml`: Haxe command line file used to build the project
+ * `README.md`: This file
+
