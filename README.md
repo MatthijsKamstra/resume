@@ -10,17 +10,32 @@ This project is `resume.json` but done with Haxe. Because Haxe transpiles to a c
 
 Language that I cover (with Haxe):
 
-- cpp (C++)
-- cs (C#)
 - node.js (without installing npm packages)
 - python
+- neko (something weird going on)
+- lua (currently doesn't work)
+- cpp (C++)
+- cs (C#)
 - java
-- neko
-- lua
 
 This is a [Haxe](http://www.haxe.org) project, read more about it in the [README_HAXE.MD](README_HAXE.MD)!
 
-# About resume.json
+## Export
+
+- [x] markdown (resume.md)
+- [x] text (resume.txt)
+- [ ] html (resume.html)
+
+But install [pandoc](https://pandoc.org/) and you can convert it to almost any filetype
+
+For example convert markdown to `.docs` or `.odt` (because we love LibreOffice)
+
+```bash
+pandoc resume.md -f markdown -t docx -s -o resume.docx
+pandoc resume.md -f markdown -t odt -s -o resume.odt
+```
+
+## About resume.json
 
 A couple years back I ran into this project <https://jsonresume.org/>
 
