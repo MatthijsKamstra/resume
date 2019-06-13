@@ -1,6 +1,0 @@
--lib markdown
-
--cp src
--D analyzer-optimize
--main Main
---interp

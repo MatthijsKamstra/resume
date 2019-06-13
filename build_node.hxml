@@ -8,6 +8,10 @@
 -dce full
 -D js-es=6
 
+
+-resource src/assets/resume.json@resumeJson
+-resource src/assets/template.mtt@htmlTemplate
+
 --next
 
 # run application
