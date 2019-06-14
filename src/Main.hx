@@ -92,11 +92,42 @@ class Main {
 		// hack
 		template = 'index';
 		writeTheme();
+
+		//
+		flatTemp();
+	}
+
+	function flatTemp() {
+		var str = haxe.Resource.getString("htmlFlatTemplate");
+		var template = new haxe.Template(str);
+
+		var settings = {
+			css: haxe.Resource.getString("flatTheme"),
+			title: json.basics.name,
+			basics: json.basics,
+			profiles: json.basics.profiles,
+			work: json.work,
+			volunteer: json.volunteer,
+			education: json.education,
+			awards: json.awards,
+			publications: json.publications,
+			skills: json.skills,
+			languages: json.languages,
+			interests: json.interests,
+			references: json.references,
+		};
+
+		var output = template.execute(settings);
+		// return output;
+		// trace(output);
+		writeFile(EXPORT, 'resume-flat.html', output);
 	}
 
 	function writeTheme() {
 		var css = haxe.Resource.getString("themeSplendor");
 		switch (template) {
+			case 'flat':
+				flatTemp();
 			case 'air':
 				css = haxe.Resource.getString("themeAir");
 			case 'modest':
@@ -228,7 +259,7 @@ class Main {
 		var output = template.execute(settings);
 		// return output;
 		// trace(output);
-		writeFile(EXPORT, 'resume_wip.html', output);
+		writeFile(EXPORT, 'resume-wip.html', output);
 	}
 
 	// ____________________________________ tools ____________________________________
