@@ -8,6 +8,14 @@
 
 -resource src/assets/resume.json@resumeJson
 -resource src/assets/template.mtt@htmlTemplate
+# theme
+-resource src/assets/markdowncss-splendor.css@themeSplendor
+-resource src/assets/markdowncss-air.css@themeAir
+-resource src/assets/markdowncss-modest.css@themeModest
+
+-resource src/assets/github-dashed.css@themeDashed
+-resource src/assets/github-killercup.css@themeKillercup
+
 
 --next
 
