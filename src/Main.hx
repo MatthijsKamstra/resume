@@ -1,6 +1,7 @@
 package;
 
 import haxe.io.Path;
+import sys.io.Process;
 import AST;
 
 using StringTools;
@@ -23,6 +24,8 @@ class Main {
 	var __arr:Array<String> = [];
 	// template settings
 	var settings:Dynamic; // should make this a typedef
+	var template = 'splendor'; // default theme
+	var isPandoc:Bool = false;
 
 	public function new(?args:Array<String>) {
 		TARGET = Sys.getCwd().split('bin/')[1].split('/')[0]; // yep, that works in this folder structure
@@ -47,6 +50,8 @@ class Main {
 		for (i in 0...args.length) {
 			var temp = args[i];
 			switch (temp) {
+				case '-t', '-theme', 'theme':
+					template = args[i + 1];
 				case '-i', '-init', 'init':
 					trace(haxe.Resource.getString("resumeJson"));
 				case '-v', '-version':
@@ -76,11 +81,65 @@ class Main {
 	// ____________________________________ write tools ____________________________________
 
 	function writeAll() {
+		isPandoc = isPandocInstalled();
+
 		writeOut();
 		writeTxt(); // first txt, because markdown modifice __txt (need to fix that)
 		writeMarkdown();
 		writeHtml();
 		writeTemplate();
+		writeTheme();
+	}
+
+	function writeTheme() {
+		var css = haxe.Resource.getString("themeSplendor");
+		switch (template) {
+			case 'air':
+				// trace('air');
+				css = haxe.Resource.getString("themeAir");
+			case 'modest':
+				// trace('modest');
+				css = haxe.Resource.getString("themeModest");
+			case 'splendor':
+				// trace('splendor');
+				css = haxe.Resource.getString("themeSplendor");
+			case 'killercup':
+				css = haxe.Resource.getString("themeKillercup");
+			case 'dashed':
+				css = haxe.Resource.getString("themeDashed");
+
+			default:
+				trace("case '" + template + "': trace ('" + template + "');");
+		}
+		writeFile(EXPORT, '${template}.css', css);
+
+		if (isPandoc) {
+			Sys.setCwd('${EXPORT}');
+			// Sys.command('ls');
+			// --toc for navigation
+			// pandoc --standalone --self-contained --table-of-contents --toc-depth=6 -t html5 --css=<css.css> <markdown.md> -o <html.html>
+			Sys.command('pandoc resume.md --metadata pagetitle="${json.basics.name}" -s  -c ${template}.css  -t html -o resume-${template}.html');
+			Sys.command('cp * /${EXPORT}/ ${Path.normalize(EXPORT + '/../')}');
+
+			trace(EXPORT);
+			trace(Path.normalize(EXPORT + '/../'));
+		}
+	}
+
+	function isPandocInstalled():Bool {
+		Sys.println("Is Pandoc installed?");
+		var p:Process = new Process('pandoc', ['-v']);
+		var out = p.stdout.readAll().toString();
+		p.close();
+
+		if (out.indexOf('pandoc') != -1) {
+			trace('You have pandoc installed!');
+			return true;
+		} else {
+			trace('Visit pandoc.org to install!');
+			return false;
+		}
+		return false;
 	}
 
 	function writeOut() {
@@ -260,6 +319,9 @@ class Main {
 		return str;
 	}
 
+	/**
+	 *   -f FORMAT, -r FORMAT  --from=FORMAT, --read=FORMAT
+	 */
 	function showHelp():Void {
 		Sys.println('------------------------------------------------
 hxLoremIpsum ($VERSION)
