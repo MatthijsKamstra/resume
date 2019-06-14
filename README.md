@@ -33,7 +33,42 @@ For example convert markdown to `.docs` or `.odt` (because we love LibreOffice)
 ```bash
 pandoc resume.md -f markdown -t docx -s -o resume.docx
 pandoc resume.md -f markdown -t odt -s -o resume.odt
+pandoc resume.md -f markdown -t html -s -o resume.html
 ```
+
+I am going to be "lazy" and asume you have Pandoc installed (I am on osx so brew will work), but otherwise go to [Pandoc install](https://pandoc.org/installing.html)
+
+```bash
+brew install pandoc
+```
+
+## templates
+
+default theme of jsonresume
+
+- [jsonresume-theme-flat](https://github.com/erming/jsonresume-theme-flat)
+
+dropin markdown converted html css templates
+
+- [sakura](https://github.com/oxalorg/sakura)
+- [buttondown](https://github.com/ryangray/buttondown)
+- [markdowncss](https://github.com/markdowncss)
+	- [slendor](https://github.com/markdowncss/splendor)
+	- [modest](https://github.com/markdowncss/modest)
+	- [air](https://github.com/markdowncss/air)
+- [killercup](https://gist.github.com/killercup/5917178)
+- [dashed](https://gist.github.com/dashed/6714393)
+
+
+pandoc html via markdown
+
+- [something](https://sdsawtelle.github.io/blog/output/simple-markdown-resume-with-pandoc-and-wkhtmltopdf.html)
+
+
+```bash
+pandoc --standalone --self-contained --table-of-contents --toc-depth=6 -t html5 --css=<css.css> <markdown.md> -o <html.html>
+```
+
 
 ## About resume.json
 
