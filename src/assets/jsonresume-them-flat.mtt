@@ -43,7 +43,7 @@
 				<div class="col-sm-6">
 					<strong>Email</strong>
 					<div class="email">
-						::basics.email::
+						<a href="mailto:::basics.email::">::basics.email::</a>
 					</div>
 				</div>
 				<div class="col-sm-6">
@@ -105,7 +105,7 @@
 			</div>
 	</section>
 
-
+	<!-- Work -->
 	<section id="work" class="row">
 		<aside class="col-sm-3">
 			<h3>Work</h3>
@@ -144,6 +144,46 @@
 
 	<!-- volunteer -->
 
+	::if volunteer::
+	<section id="volunteer" class="row">
+		<aside class="col-sm-3">
+			<h3>Volunteer</h3>
+		</aside>
+		<div class="col-sm-9">
+			<div class="row">
+			::foreach volunteer::
+			<div class="col-sm-12">
+				<h4 class="strike-through">
+					<span>::organization::</span>
+					<span class="date">
+						::startDate:: — ::endDate::
+					</span>
+				</h4>
+				<div class="website pull-right">
+
+					<a href="::website::">::website::</a>
+				</div>
+				<div class="position">
+				::position::
+				</div>
+				<div class="summary">
+					<p>::summary::</p>
+				</div>
+				::if highlights::
+				<h4>Highlights</h4>
+				<ul class="highlights">
+					::foreach highlights::
+					<li class="bullet">::__current__::</li>
+					::end::
+				</ul>
+				::end::
+			</div>
+			::end::
+			</div>
+		</div>
+	</section>
+	::end::
+
 	<!-- education -->
 	::if education::
 	<section id="education" class="row">
@@ -181,7 +221,72 @@
 
 
 	<!-- awards -->
+	::if (awards)::
+	<section id="awards" class="row">
+		<aside class="col-sm-3">
+			<h3>Awards</h3>
+		</aside>
+		<div class="col-sm-9">
+			<div class="row">
+			::foreach awards::
+			<div class="col-sm-12">
+				<h4 class="strike-through">
+					<span>::title::</span>
+				</h4>
+
+				<div class="date pull-right">
+					<em>Awarded</em>
+						::date::
+				</div>
+				<div class="awarder">
+					<em>by</em>
+					<strong>
+				::awarder::
+					</strong>
+				</div>
+				<div class="summary">
+				::summary::
+				</div>
+
+			</div>
+			::end::
+			</div>
+		</div>
+	</section>
+	::end::
+
 	<!-- publications -->
+	::if (publications)::
+	<section id="publications" class="row">
+		<aside class="col-sm-3">
+			<h3>Publications</h3>
+		</aside>
+		<div class="col-sm-9">
+			<div class="row">
+			::foreach publications::
+			<div class="col-sm-12">
+				<h4 class="strike-through">
+					<span>::name::</span>
+					<span class="date">
+						::releaseDate::
+					</span>
+				</h4>
+				<div class="website pull-right">
+					<a href="::website::"></a>
+				</div>
+				<div class="publisher">
+					<em>Published by</em>
+					<strong>::publisher::</strong>
+				</div>
+				<div class="summary">
+					<p>::summary::</p>
+				</div>
+			</div>
+			::end::
+			</div>
+		</div>
+	</section>
+	::end::
 
 	<!-- skills -->
 	::if skills::
@@ -260,7 +365,31 @@
 
 
 	<!-- references -->
-
+	::if (references)::
+	<section id="references" class="row">
+		<aside class="col-sm-3">
+			<h3>References</h3>
+		</aside>
+		<div class="col-sm-9">
+			<div class="row">
+			::foreach references::
+			<div class="col-sm-12">
+				::if reference::
+				<blockquote class="reference">
+					<p>::reference::</p>
+					<p class="name">
+						<strong>—
+					::name::
+						</strong>
+					</p>
+				</blockquote>
+				::end::
+			</div>
+			::end::
+			</div>
+		</div>
+	</section>
+	::end::
 
 
 
