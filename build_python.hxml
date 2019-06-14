@@ -8,6 +8,9 @@
 
 -resource src/assets/resume.json@resumeJson
 -resource src/assets/template.mtt@htmlTemplate
+# flat theme
+-resource src/assets/jsonresume-them-flat.mtt@htmlFlatTemplate
+-resource src/assets/jsonresume-them-flat.css@flatTheme
 # theme
 -resource src/assets/markdowncss-splendor.css@themeSplendor
 -resource src/assets/markdowncss-air.css@themeAir
