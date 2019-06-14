@@ -7,3 +7,4 @@
 -cmd python3 main.py -theme splendor
 -cmd python3 main.py -theme dashed
 -cmd python3 main.py -theme killercup
+-cmd python3 main.py -theme index

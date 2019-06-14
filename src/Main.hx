@@ -89,40 +89,38 @@ class Main {
 		writeHtml();
 		writeTemplate();
 		writeTheme();
+		// hack
+		template = 'index';
+		writeTheme();
 	}
 
 	function writeTheme() {
 		var css = haxe.Resource.getString("themeSplendor");
 		switch (template) {
 			case 'air':
-				// trace('air');
 				css = haxe.Resource.getString("themeAir");
 			case 'modest':
-				// trace('modest');
 				css = haxe.Resource.getString("themeModest");
-			case 'splendor':
-				// trace('splendor');
+			case 'splendor', 'index':
 				css = haxe.Resource.getString("themeSplendor");
 			case 'killercup':
 				css = haxe.Resource.getString("themeKillercup");
 			case 'dashed':
 				css = haxe.Resource.getString("themeDashed");
-
 			default:
 				trace("case '" + template + "': trace ('" + template + "');");
 		}
 		writeFile(EXPORT, '${template}.css', css);
 
 		if (isPandoc) {
+			trace(EXPORT);
+			trace(Path.normalize(EXPORT + '/../'));
 			Sys.setCwd('${EXPORT}');
 			// Sys.command('ls');
 			// --toc for navigation
 			// pandoc --standalone --self-contained --table-of-contents --toc-depth=6 -t html5 --css=<css.css> <markdown.md> -o <html.html>
 			Sys.command('pandoc resume.md --metadata pagetitle="${json.basics.name}" -s  -c ${template}.css  -t html -o resume-${template}.html');
 			Sys.command('cp * /${EXPORT}/ ${Path.normalize(EXPORT + '/../')}');
-
-			trace(EXPORT);
-			trace(Path.normalize(EXPORT + '/../'));
 		}
 	}
 
