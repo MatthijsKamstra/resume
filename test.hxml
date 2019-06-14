@@ -1,0 +1,9 @@
+-cmd haxe build_python.hxml
+-cmd cd bin/python
+# themes test
+-cmd python3 main.py -theme air
+-cmd python3 main.py -theme modest
+-cmd python3 main.py -theme flat
+-cmd python3 main.py -theme splendor
+-cmd python3 main.py -theme dashed
+-cmd python3 main.py -theme killercup
