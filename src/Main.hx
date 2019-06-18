@@ -108,12 +108,12 @@ class Main {
 
 	function index() {
 		var arr = sys.FileSystem.readDirectory(DOCS);
-		var html = '<ul>';
+		var html = '<ul>\n';
 		for (i in 0...arr.length) {
 			var _arr = arr[i];
-			html += '<li><a href="${_arr}">${_arr}</a></li>';
+			html += '\t<li><a href="${_arr}">${_arr}</a></li>\n';
 		}
-		html += '</ul>';
+		html += '</ul>\n';
 
 		var temp = '<!doctype html>
 <html lang="en">
@@ -129,7 +129,7 @@ class Main {
   </head>
   <body>
     <div class="container">
-	${html}
+${html}
 
 	</div>
 

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Matthijs Kamstra</title>
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+html {
+font-size: 100%;
+overflow-y: scroll;
+-webkit-text-size-adjust: 100%;
+-ms-text-size-adjust: 100%;
+}
+body {
+color: #444;
+font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif;
+font-size: 12px;
+line-height: 1.7;
+padding: 1em;
+margin: auto;
+max-width: 42em;
+background: #fefefe;
+}
+a {
+color: #0645ad;
+text-decoration: none;
+}
+a:visited {
+color: #0b0080;
+}
+a:hover {
+color: #06e;
+}
+a:active {
+color: #faa700;
+}
+a:focus {
+outline: thin dotted;
+}
+*::-moz-selection {
+background: rgba(255, 255, 0, 0.3);
+color: #000;
+}
+*::selection {
+background: rgba(255, 255, 0, 0.3);
+color: #000;
+}
+a::-moz-selection {
+background: rgba(255, 255, 0, 0.3);
+color: #0645ad;
+}
+a::selection {
+background: rgba(255, 255, 0, 0.3);
+color: #0645ad;
+}
+p {
+margin: 1em 0;
+}
+img {
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+color: #111;
+line-height: 125%;
+margin-top: 2em;
+font-weight: normal;
+}
+h4, h5, h6 {
+font-weight: bold;
+}
+h1 {
+font-size: 2.5em;
+}
+h2 {
+font-size: 2em;
+}
+h3 {
+font-size: 1.5em;
+}
+h4 {
+font-size: 1.2em;
+}
+h5 {
+font-size: 1em;
+}
+h6 {
+font-size: 0.9em;
+}
+blockquote {
+color: #666666;
+margin: 0;
+padding-left: 3em;
+border-left: 0.5em #EEE solid;
+}
+hr {
+display: block;
+height: 2px;
+border: 0;
+border-top: 1px solid #aaa;
+border-bottom: 1px solid #eee;
+margin: 1em 0;
+padding: 0;
+}
+pre, code, kbd, samp {
+color: #000;
+font-family: monospace, monospace;
+_font-family: 'courier new', monospace;
+font-size: 0.98em;
+}
+pre {
+white-space: pre;
+white-space: pre-wrap;
+word-wrap: break-word;
+}
+b, strong {
+font-weight: bold;
+}
+dfn {
+font-style: italic;
+}
+ins {
+background: #ff9;
+color: #000;
+text-decoration: none;
+}
+mark {
+background: #ff0;
+color: #000;
+font-style: italic;
+font-weight: bold;
+}
+sub, sup {
+font-size: 75%;
+line-height: 0;
+position: relative;
+vertical-align: baseline;
+}
+sup {
+top: -0.5em;
+}
+sub {
+bottom: -0.25em;
+}
+ul, ol {
+margin: 1em 0;
+padding: 0 0 0 2em;
+}
+li p:last-child {
+margin-bottom: 0;
+}
+ul ul, ol ol {
+margin: .3em 0;
+}
+dl {
+margin-bottom: 1em;
+}
+dt {
+font-weight: bold;
+margin-bottom: .8em;
+}
+dd {
+margin: 0 0 .8em 2em;
+}
+dd:last-child {
+margin-bottom: 0;
+}
+img {
+border: 0;
+-ms-interpolation-mode: bicubic;
+vertical-align: middle;
+}
+figure {
+display: block;
+text-align: center;
+margin: 1em 0;
+}
+figure img {
+border: none;
+margin: 0 auto;
+}
+figcaption {
+font-size: 0.8em;
+font-style: italic;
+margin: 0 0 .8em;
+}
+table {
+margin-bottom: 2em;
+border-bottom: 1px solid #ddd;
+border-right: 1px solid #ddd;
+border-spacing: 0;
+border-collapse: collapse;
+}
+table th {
+padding: .2em 1em;
+background-color: #eee;
+border-top: 1px solid #ddd;
+border-left: 1px solid #ddd;
+}
+table td {
+padding: .2em 1em;
+border-top: 1px solid #ddd;
+border-left: 1px solid #ddd;
+vertical-align: top;
+}
+.author {
+font-size: 1.2em;
+text-align: center;
+}
+@media only screen and (min-width: 480px) {
+body {
+font-size: 14px;
+}
+}
+@media only screen and (min-width: 768px) {
+body {
+font-size: 16px;
+}
+}
+@media print {
+* {
+background: transparent !important;
+color: black !important;
+filter: none !important;
+-ms-filter: none !important;
+}
+body {
+font-size: 12pt;
+max-width: 100%;
+}
+a, a:visited {
+text-decoration: underline;
+}
+hr {
+height: 1px;
+border: 0;
+border-bottom: 1px solid black;
+}
+a[href]:after {
+content: " (" attr(href) ")";
+}
+abbr[title]:after {
+content: " (" attr(title) ")";
+}
+.ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after {
+content: "";
+}
+pre, blockquote {
+border: 1px solid #999;
+padding-right: 1em;
+page-break-inside: avoid;
+}
+tr, img {
+page-break-inside: avoid;
+}
+img {
+max-width: 100% !important;
+}
+@page :left {
+margin: 15mm 20mm 15mm 10mm;
+}
+@page :right {
+margin: 15mm 10mm 15mm 20mm;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3 {
+page-break-after: avoid;
+}
+}
+</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="matthijs-kamstra">Matthijs Kamstra</h1>
+<h2 id="programmer">Programmer</h2>
+<h3 id="basics">Basics</h3>
+<ul>
+<li><strong>Name:</strong> Matthijs Kamstra</li>
+<li><strong>Label:</strong> Programmer</li>
+<li><strong>Picture:</strong> http://matthijskamstra.nl/user/pages/01.home/00._hero/matthijs-kamsta_hero.jpg</li>
+<li><strong>Email:</strong> fake@foobar.com</li>
+<li><strong>Phone:</strong> (912) 555-4321</li>
+<li><strong>Website:</strong> http://richardhendricks.com</li>
+<li><strong>Summary:</strong> Richard hails from Tulsa. He has earned degrees from the University of Oklahoma and Stanford. (Go Sooners and Cardinals!) Before starting Pied Piper, he worked for Hooli as a part time software developer. While his work focuses on applied information theory, mostly optimizing lossless compression schema of both the length-limited and adaptive variants, his non-work interests range widely, everything from quantum computing to chaos theory. He could tell you about it, but THAT would NOT be a “length-limited” conversation!</li>
+<li><strong>Location:</strong>
+<ul>
+<li><strong>Address:</strong> 2712 Broadway St</li>
+<li><strong>PostalCode:</strong> CA 94115</li>
+<li><strong>City:</strong> San Francisco</li>
+<li><strong>CountryCode:</strong> US</li>
+<li><strong>Region:</strong> California</li>
+</ul></li>
+<li><strong>Profiles:</strong>
+<ul>
+<li><strong>Network:</strong> Twitter</li>
+<li><strong>Username:</strong> neutralthoughts</li>
+<li><strong>Url:</strong></li>
+<li><strong>Network:</strong> SoundCloud</li>
+<li><strong>Username:</strong> dandymusicnl</li>
+<li><strong>Url:</strong> https://soundcloud.com/dandymusicnl</li>
+</ul></li>
+</ul>
+<h3 id="work">Work</h3>
+<ul>
+<li><strong>Company:</strong> Pied Piper</li>
+<li><strong>Position:</strong> CEO/President</li>
+<li><strong>Website:</strong> http://piedpiper.com</li>
+<li><strong>StartDate:</strong> 2013-12-01</li>
+<li><strong>EndDate:</strong> 2014-12-01</li>
+<li><strong>Summary:</strong> Pied Piper is a multi-platform technology based on a proprietary universal compression algorithm that has consistently fielded high Weisman Scores™ that are not merely competitive, but approach the theoretical limit of lossless compression.</li>
+<li><strong>Highlights:</strong></li>
+<li><strong>Company:</strong> Pied Piper2</li>
+<li><strong>Position:</strong> CEO/President</li>
+<li><strong>Website:</strong> http://piedpiper.com</li>
+<li><strong>StartDate:</strong> 2013-12-01</li>
+<li><strong>EndDate:</strong> 2014-12-01</li>
+<li><strong>Summary:</strong> Pied Piper is a multi-platform technology based on a proprietary universal compression algorithm that has consistently fielded high Weisman Scores™ that are not merely competitive, but approach the theoretical limit of lossless compression.</li>
+<li><strong>Highlights:</strong></li>
+</ul>
+<h3 id="volunteer">Volunteer</h3>
+<ul>
+<li><strong>Organization:</strong> CoderDojo</li>
+<li><strong>Position:</strong> Teacher</li>
+<li><strong>Website:</strong> http://coderdojo.com/</li>
+<li><strong>StartDate:</strong> 2012-01-01</li>
+<li><strong>EndDate:</strong> 2013-01-01</li>
+<li><strong>Summary:</strong> Global movement of free coding clubs for young people.</li>
+<li><strong>Highlights:</strong></li>
+</ul>
+<h3 id="education">Education</h3>
+<ul>
+<li><strong>Institution:</strong> University of Oklahoma</li>
+<li><strong>Area:</strong> Information Technology</li>
+<li><strong>StudyType:</strong> Bachelor</li>
+<li><strong>StartDate:</strong> 2011-06-01</li>
+<li><strong>EndDate:</strong> 2014-01-01</li>
+<li><strong>Gpa:</strong> 4.0</li>
+<li><strong>Courses:</strong></li>
+</ul>
+<h3 id="awards">Awards</h3>
+<ul>
+<li><strong>Title:</strong> Digital Compression Pioneer Award</li>
+<li><strong>Date:</strong> 2014-11-01</li>
+<li><strong>Awarder:</strong> Techcrunch</li>
+<li><strong>Summary:</strong> There is no spoon.</li>
+</ul>
+<h3 id="publications">Publications</h3>
+<ul>
+<li><strong>Name:</strong> Video compression for 3d media</li>
+<li><strong>Publisher:</strong> Hooli</li>
+<li><strong>ReleaseDate:</strong> 2014-10-01</li>
+<li><strong>Website:</strong> http://en.wikipedia.org/wiki/Silicon_Valley_(TV_series)</li>
+<li><strong>Summary:</strong> Innovative middle-out compression algorithm that changes the way we store data.</li>
+</ul>
+<h3 id="skills">Skills</h3>
+<ul>
+<li><strong>Name:</strong> Web Development</li>
+<li><strong>Level:</strong> Master</li>
+<li><strong>Keywords:</strong></li>
+<li><strong>Name:</strong> Compression</li>
+<li><strong>Level:</strong> Master</li>
+<li><strong>Keywords:</strong></li>
+</ul>
+<h3 id="languages">Languages</h3>
+<ul>
+<li><strong>Language:</strong> English</li>
+<li><strong>Fluency:</strong> Native speaker</li>
+</ul>
+<h3 id="interests">Interests</h3>
+<ul>
+<li><strong>Name:</strong> Wildlife</li>
+<li><strong>Keywords:</strong></li>
+</ul>
+<h3 id="references">References</h3>
+<ul>
+<li><strong>Name:</strong> Erlich Bachman</li>
+<li><strong>Reference:</strong> It is my pleasure to recommend Richard, his performance working as a consultant for Main St. Company proved that he will be a valuable addition to any company.</li>
+</ul>
+</body>
+</html>
