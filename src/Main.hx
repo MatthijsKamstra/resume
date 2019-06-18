@@ -99,6 +99,7 @@ class Main {
 
 	function flatTemp() {
 		var str = haxe.Resource.getString("htmlFlatTemplate");
+
 		var template = new haxe.Template(str);
 
 		var settings = {
@@ -295,7 +296,11 @@ class Main {
 				default:
 					// trace(">>>>>> " + Type.typeof(pjson));
 					// trace(">>>>>> " + (Reflect.field(pjson,i)));
+					#if neko
+					__txt += '${tab}${capitalizeFirstLetter(varName)}: ${Reflect.field(json, varName)}\n';
+					#else
 					trace("[FIXME] type: " + Type.typeof(Reflect.field(json, varName)) + ' / ${varName}: ' + Reflect.field(json, varName));
+					#end
 			}
 		}
 	}
@@ -321,7 +326,7 @@ class Main {
 		}
 		// write the file
 		sys.io.File.saveContent(path + '/${filename}', content);
-		trace('written file: ${path}/${filename}');
+		// trace('written file: ${path}/${filename}');
 	}
 
 	function correctCLI(target:String):String {
