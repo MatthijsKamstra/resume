@@ -12,12 +12,15 @@ class Main {
 	 */
 	var VERSION:String = '0.0.1';
 
+	var NAME:String = 'Resume-hx';
+
 	// resume data
 	var json:ResumeObjObj;
 	// defaults
 	var TARGET:String; // current target (neko, node.js, c++, c#, python, java)
 	var ASSETS:String; // root folder of the website
-	var EXPORT:String; // folder to generate files in (in this case `docs` folder from github )
+	var EXPORT:String; // folder to generate files in (in this case `www` folder from github )
+	var DOCS:String; // folder to generate files in (in this case `docs` folder from github )
 	// wip
 	var __txt:String = '';
 	var __md:String = '';
@@ -27,14 +30,18 @@ class Main {
 	var template = 'splendor'; // default theme
 	var isPandoc:Bool = false;
 
+	var progressCounter = 0;
+	var progressTotal = 7; // what is this?
+
 	public function new(?args:Array<String>) {
 		TARGET = Sys.getCwd().split('bin/')[1].split('/')[0]; // yep, that works in this folder structure
-		EXPORT = Path.normalize(Sys.getCwd().split('bin/')[0] + '/docs/${TARGET}'); // normal situation this would we just the `www` or `docs` folder
+		EXPORT = Path.normalize(Sys.getCwd().split('bin/')[0] + '/www/${TARGET}'); // normal situation this would we just the `www` or `docs` folder
+		DOCS = Path.normalize(Sys.getCwd().split('bin/')[0] + '/docs'); // normal situation this would we just the `www` or `docs` folder
 		ASSETS = Path.normalize(Sys.getCwd().split('bin/')[0] + '/assets/');
 
 		trace('[${TARGET}] Working with resume.json');
 
-		Sys.println('[${TARGET}] CLI "hxLoremIpsum" ');
+		Sys.println('[${TARGET}] CLI "${NAME}" ');
 
 		// create some general information/settings which can be used for template generation
 		settings = {
@@ -71,7 +78,7 @@ class Main {
 		if (sys.FileSystem.exists(path)) {
 			var str:String = sys.io.File.getContent(path);
 			json = haxe.Json.parse(str);
-			trace("json.basics.name: " + json.basics.name);
+			// trace("json.basics.name: " + json.basics.name);
 			writeAll();
 		} else {
 			trace('ERROR: there is no spoon: $path');
@@ -90,11 +97,51 @@ class Main {
 		writeTemplate();
 		writeTheme();
 		// hack
-		template = 'index';
-		writeTheme();
+		// template = 'index';
+		// writeTheme();
 
 		//
 		flatTemp();
+
+		index();
+	}
+
+	function index() {
+		var arr = sys.FileSystem.readDirectory(DOCS);
+		var html = '<ul>';
+		for (i in 0...arr.length) {
+			var _arr = arr[i];
+			html += '<li><a href="${_arr}">${_arr}</a></li>';
+		}
+		html += '</ul>';
+
+		var temp = '<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Resume</title>
+  </head>
+  <body>
+    <div class="container">
+	${html}
+
+	</div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>';
+
+		writeFile(DOCS, 'index.html', temp);
 	}
 
 	function flatTemp() {
@@ -145,25 +192,28 @@ class Main {
 		writeFile(EXPORT, '${template}.css', css);
 
 		if (isPandoc) {
-			trace(EXPORT);
-			trace(Path.normalize(EXPORT + '/../'));
+			// trace(EXPORT);
+			// trace(Path.normalize(EXPORT + '/../'));
 			Sys.setCwd('${EXPORT}');
 			// Sys.command('ls');
 			// --toc for navigation
 			// pandoc --standalone --self-contained --table-of-contents --toc-depth=6 -t html5 --css=<css.css> <markdown.md> -o <html.html>
-			Sys.command('pandoc resume.md --metadata pagetitle="${json.basics.name}" -s  -c ${template}.css  -t html -o resume-${template}.html');
-			Sys.command('cp * /${EXPORT}/ ${Path.normalize(EXPORT + '/../')}');
+			Sys.command('pandoc resume.md --standalone --self-contained --metadata pagetitle="${json.basics.name}" -c ${template}.css  -t html -o resume-${template}.html');
+
+			// [mck] copy files to the docs folder... little weird if this was really a CLI
+			Sys.command('mkdir -p ${Path.normalize(DOCS)}');
+			Sys.command('cp * ${Path.normalize(DOCS)}');
 		}
 	}
 
 	function isPandocInstalled():Bool {
-		Sys.println("Is Pandoc installed?");
+		// Sys.println("Is Pandoc installed?");
 		var p:Process = new Process('pandoc', ['-v']);
 		var out = p.stdout.readAll().toString();
 		p.close();
 
 		if (out.indexOf('pandoc') != -1) {
-			trace('You have pandoc installed!');
+			// trace('You have pandoc installed!');
 			return true;
 		} else {
 			trace('Visit pandoc.org to install!');
@@ -327,6 +377,9 @@ class Main {
 		// write the file
 		sys.io.File.saveContent(path + '/${filename}', content);
 		// trace('written file: ${path}/${filename}');
+		progressCounter++;
+		// util.ProgressBar.out(progressCounter, progressTotal);
+		// trace('count: ${progressCounter}/${progressTotal}');
 	}
 
 	function correctCLI(target:String):String {
@@ -357,19 +410,20 @@ class Main {
 	 *   -f FORMAT, -r FORMAT  --from=FORMAT, --read=FORMAT
 	 */
 	function showHelp():Void {
-		Sys.println('------------------------------------------------
-hxLoremIpsum ($VERSION)
-
-How to use (${TARGET}):
-${correctCLI(TARGET)} -out
-
-	-version / -v   : version number
-	-help / -h      : show this help
-	-folder / -cd   : path to project folder
-	-out / -o       : write readme
-------------------------------------------------
-');
-
+		var str = '';
+		str += '------------------------------------------------\n';
+		str += '${NAME} ($VERSION)\n';
+		str += '\n';
+		str += 'How to use (${TARGET}):\n';
+		str += '${correctCLI(TARGET)} -out\n';
+		str += '\n';
+		str += '	-version / -v   : version number\n';
+		str += '	-help / -h      : show this help\n';
+		str += '	-folder / -cd   : path to project folder\n';
+		str += '	-out / -o       : write readme\n';
+		str += '\n';
+		str += '------------------------------------------------\n';
+		Sys.println(str);
 	}
 
 	// ____________________________________ starting point ____________________________________
