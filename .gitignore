@@ -2,3 +2,5 @@ bin
 www
 _export
 doc.hxml
+_doc.hxml
+_test.hxml
