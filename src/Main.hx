@@ -8,19 +8,22 @@ using StringTools;
 
 class Main {
 	/**
+	 * 0.0.2 	working on the cli version
 	 * 0.0.1 	initial release
 	 */
-	var VERSION:String = '0.0.1';
+	var VERSION:String = '0.0.2';
 
 	var NAME:String = 'Resume-hx';
 
 	// resume data
 	var json:ResumeObjObj;
 	// defaults
-	var TARGET:String; // current target (neko, node.js, c++, c#, python, java)
-	var ASSETS:String; // root folder of the website
-	var EXPORT:String; // folder to generate files in (in this case `www` folder from github )
-	var DOCS:String; // folder to generate files in (in this case `docs` folder from github )
+	var TARGET:String = Util.currentTarget(); // current target (neko, node.js, c++, c#, python, java)
+	var ASSETS:String = Util.assetsPath(); // root folder of the website
+	var WWW:String = Util.wwwPath(); // folder to generate files in (in this case `www` folder from github )
+	var EXPORT:String = Util.exportPath(); // folder to generate files in (in this case `www` folder from github )
+	var DOCS:String = Util.docsPath(); // folder to generate files in (in this case `docs` folder from github )
+	var CWD:String = Sys.getCwd(); // active folder
 	// wip
 	var __txt:String = '';
 	var __md:String = '';
@@ -29,16 +32,12 @@ class Main {
 	var settings:Dynamic; // should make this a typedef
 	var template = 'splendor'; // default theme
 	var isPandoc:Bool = false;
-
-	var progressCounter = 0;
-	var progressTotal = 7; // what is this?
+	var isInputPath:Bool = false;
+	var isOutputPath:Bool = false;
+	var isDebug:Bool = false;
 
 	public function new(?args:Array<String>) {
-		TARGET = Sys.getCwd().split('bin/')[1].split('/')[0]; // yep, that works in this folder structure
-		EXPORT = Path.normalize(Sys.getCwd().split('bin/')[0] + '/www/${TARGET}'); // normal situation this would we just the `www` or `docs` folder
-		DOCS = Path.normalize(Sys.getCwd().split('bin/')[0] + '/docs'); // normal situation this would we just the `www` or `docs` folder
-		ASSETS = Path.normalize(Sys.getCwd().split('bin/')[0] + '/assets/');
-
+		// trace('${TARGET}, \n${EXPORT}, \n${DOCS}, \n${ASSETS}, \n${CWD}');
 		trace('[${TARGET}] Working with resume.json');
 
 		Sys.println('[${TARGET}] CLI "${NAME}" ');
@@ -54,34 +53,53 @@ class Main {
 		if (args.length == 0)
 			args.push('-h');
 
+		var path = CWD;
+
 		for (i in 0...args.length) {
 			var temp = args[i];
 			switch (temp) {
-				case '-t', '-theme', 'theme':
-					template = args[i + 1];
-				case '-i', '-init', 'init':
-					trace(haxe.Resource.getString("resumeJson"));
 				case '-v', '-version':
 					Sys.println('version: ' + VERSION);
-				case '-cd', '-folder': // isFolderSet = true;
+				case '-d', '-debug':
+					isDebug = true;
 				case '-help', '-h':
 					showHelp();
+				case '-t', '-theme', 'theme', 'template', '-template':
+					template = args[i + 1];
+				case '-init', 'init':
+					Sys.println('[${TARGET}] create an empty _resume.json');
+					// write a "empty" resume in the current folder
+					writeFile(CWD, '_resume.json', haxe.Resource.getString("resumeJson"));
+					return;
+				case '-cd', '-folder': // isFolderSet = true;
+				case '-in', '-i', '-input':
+					isInputPath = true;
+					var temp = args[i + 1];
+					path = Path.directory(temp);
+					EXPORT = path;
+				// trace(path);
+				// if empty use current folder
+				// if not resume.json
+				// need a check
 				case '-out', '-o':
-					writeAll();
+					isOutputPath = true;
+					var temp = args[i + 1];
+					EXPORT = temp;
+				// writeAll();
 				default:
-					trace("case '" + temp + "': trace ('" + temp + "');");
+					// trace("case '" + temp + "': trace ('" + temp + "');");
 			}
 		}
 
-		var path = Path.normalize(ASSETS + '/resume.json');
+		var resumePath = Path.normalize(path + '/resume.json');
 
-		if (sys.FileSystem.exists(path)) {
-			var str:String = sys.io.File.getContent(path);
+		if (sys.FileSystem.exists(resumePath)) {
+			var str:String = sys.io.File.getContent(resumePath);
 			json = haxe.Json.parse(str);
 			// trace("json.basics.name: " + json.basics.name);
 			writeAll();
 		} else {
-			trace('ERROR: there is no spoon: $path');
+			trace('ERROR: there is no spoon: $resumePath');
 		}
 	}
 
@@ -90,24 +108,22 @@ class Main {
 	function writeAll() {
 		isPandoc = isPandocInstalled();
 
-		writeOut();
-		writeTxt(); // first txt, because markdown modifice __txt (need to fix that)
-		writeMarkdown();
-		writeHtml();
-		writeTemplate();
-		writeTheme();
-		// hack
-		// template = 'index';
-		// writeTheme();
-
-		//
+		prepareOut();
+		writeTxt(); // `resume.txt`: ßfirst txt, because markdown modifice __txt (need to fix that)
+		writeMarkdown(); // `resume.md`
+		writeSimpleHtml(); // bootrap and the markdowntohtml exprt in a container
+		writeBasicTemplate(); // working on a version that makes (WIP)
+		writeTheme(); // current theme is splendor
 		flatTemp();
-
 		index();
 	}
 
+	/**
+	 * convert the EXPORT dir content into a index.html
+	 * so you have a list of items in that folder
+	 */
 	function index() {
-		var arr = sys.FileSystem.readDirectory(DOCS);
+		var arr = sys.FileSystem.readDirectory(EXPORT);
 		var html = '<ul>\n';
 		for (i in 0...arr.length) {
 			var _arr = arr[i];
@@ -144,6 +160,10 @@ ${html}
 		writeFile(DOCS, 'index.html', temp);
 	}
 
+	/**
+	 * haxe template as close to the original I could
+	 * will build more
+	 */
 	function flatTemp() {
 		var str = haxe.Resource.getString("htmlFlatTemplate");
 
@@ -200,12 +220,18 @@ ${html}
 			// pandoc --standalone --self-contained --table-of-contents --toc-depth=6 -t html5 --css=<css.css> <markdown.md> -o <html.html>
 			Sys.command('pandoc resume.md --standalone --self-contained --metadata pagetitle="${json.basics.name}" -c ${template}.css  -t html -o resume-${template}.html');
 
-			// [mck] copy files to the docs folder... little weird if this was really a CLI
-			Sys.command('mkdir -p ${Path.normalize(DOCS)}');
-			Sys.command('cp * ${Path.normalize(DOCS)}');
+			// // [mck] copy files to the docs folder... little weird if this was really a CLI
+			// Sys.command('mkdir -p ${Path.normalize(DOCS)}');
+			// Sys.command('cp * ${Path.normalize(DOCS)}');
 		}
 	}
 
+	/**
+	 * use `pandoc` to write other files,
+	 * this is to check if its installed
+	 *
+	 * @return Bool
+	 */
 	function isPandocInstalled():Bool {
 		// Sys.println("Is Pandoc installed?");
 		var p:Process = new Process('pandoc', ['-v']);
@@ -222,7 +248,10 @@ ${html}
 		return false;
 	}
 
-	function writeOut() {
+	/**
+	 * get `resume.json` and convert this into useable data
+	 */
+	function prepareOut() {
 		// collect all the first level names of the nodes
 		__arr = [];
 		for (varName in Reflect.fields(json)) {
@@ -231,6 +260,16 @@ ${html}
 		// reset __txt and unwrap
 		__txt = '';
 		unwrapJson(json, '');
+	}
+
+	function writeTxt():Void {
+		var str = '${json.basics.name}\n';
+		str += '${json.basics.label}\n';
+		str += '\n';
+
+		str += __txt;
+
+		writeFile(EXPORT, 'resume.txt', str);
 	}
 
 	function writeMarkdown() {
@@ -251,6 +290,8 @@ ${html}
 		__txt = __txt.replace('**- ', '\t- **'); // convert the double tab to dubble tab list
 		__txt = __txt.replace(': ', ':** '); // create bold in combintaion with previous replace
 
+		// picture??? ![name](path)
+
 		str += __txt;
 
 		__md = Markdown.markdownToHtml(__txt);
@@ -258,17 +299,10 @@ ${html}
 		writeFile(EXPORT, 'resume.md', str);
 	}
 
-	function writeTxt():Void {
-		var str = '${json.basics.name}\n';
-		str += '${json.basics.label}\n';
-		str += '\n';
-
-		str += __txt;
-
-		writeFile(EXPORT, 'resume.txt', str);
-	}
-
-	function writeHtml():Void {
+	/**
+	 * Super simple template based upon Bootstrap and simple markdownconversion
+	 */
+	function writeSimpleHtml():Void {
 		var str = '<!doctype html>
 <html lang="en">
   <head>
@@ -298,7 +332,10 @@ ${html}
 		writeFile(EXPORT, 'resume.html', str);
 	}
 
-	function writeTemplate() {
+	/**
+	 * this is work in progress, it ends up as `resume-wip.html`
+	 */
+	function writeBasicTemplate() {
 		var str = haxe.Resource.getString("htmlTemplate");
 		var template = new haxe.Template(str);
 
@@ -366,9 +403,9 @@ ${html}
 
 	/**
 	 * simply write the files
-	 * @param path 		folder to write the files (current assumption is `EXPORT`)
+	 * @param path 		folder to write the files
 	 * @param filename	(with extension) the file name
-	 * @param content	what to write to the file (in our case markdown)
+	 * @param content	what to write to the file
 	 */
 	function writeFile(path:String, filename:String, content:String) {
 		if (!sys.FileSystem.exists(path)) {
@@ -377,25 +414,32 @@ ${html}
 		// write the file
 		sys.io.File.saveContent(path + '/${filename}', content);
 		// trace('written file: ${path}/${filename}');
-		progressCounter++;
-		// util.ProgressBar.out(progressCounter, progressTotal);
-		// trace('count: ${progressCounter}/${progressTotal}');
 	}
 
+	// ____________________________________ help ____________________________________
+
+	/**
+	 * how to call the script, is done here
+	 *
+	 * Currently only needed for the help
+	 *
+	 * @param target		string with name target. Example: 'cs', 'python', etc
+	 * @return String
+	 */
 	function correctCLI(target:String):String {
 		var str = '';
-		switch (target) {
+		switch (target.toLowerCase()) {
 			case 'neko':
 				str = 'neko main';
-			case 'cpp':
+			case 'cpp', 'c++':
 				str = '/Main';
-			case 'cs':
+			case 'cs', 'c#':
 				str = 'mono Main.exe';
 			case 'java':
 				str = 'java -jar Main.jar';
 			case 'lua':
 				str = 'lua main.lua';
-			case 'node':
+			case 'node', 'node.js':
 				str = 'node main.js';
 			case 'python':
 				str = 'python3 main.py';

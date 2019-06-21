@@ -1,6 +1,10 @@
 # TODO
 
-- [ ] init via terminal
+- [x] init via terminal
+- [ ] `-in`
+- [ ] `-out`
+- [ ] `-template`
+- [ ] `-template`
 - [ ] bootstrap template
 
 
@@ -18,6 +22,8 @@
 http-server [path] [options]
 ```
 
+# package.json ???
+  "serve": "http-server public/ -c-1"
 
 ## get all targets working
 
@@ -26,3 +32,8 @@ http-server [path] [options]
 - [ ] java
 - [ ] lua
 - [ ] neko (maybe)
+
+
+
+https://jsonlint.com/
+
