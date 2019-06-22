@@ -38,6 +38,7 @@ class Main {
 
 	public function new(?args:Array<String>) {
 		// trace('${TARGET}, \n${EXPORT}, \n${DOCS}, \n${ASSETS}, \n${CWD}');
+		Sys.println('');
 		trace('[${TARGET}] Working with resume.json');
 
 		Sys.println('[${TARGET}] CLI "${NAME}" ');
@@ -58,11 +59,11 @@ class Main {
 		for (i in 0...args.length) {
 			var temp = args[i];
 			switch (temp) {
-				case '-v', '-version':
+				case '-v', '-version', '--version':
 					Sys.println('version: ' + VERSION);
-				case '-d', '-debug':
+				case '-d', '-debug', '--debug':
 					isDebug = true;
-				case '-help', '-h':
+				case '-h', '-help', '--help':
 					showHelp();
 				case '-t', '-theme', 'theme', 'template', '-template':
 					template = args[i + 1];
@@ -71,21 +72,15 @@ class Main {
 					// write a "empty" resume in the current folder
 					writeFile(CWD, '_resume.json', haxe.Resource.getString("resumeJson"));
 					return;
-				case '-cd', '-folder': // isFolderSet = true;
-				case '-in', '-i', '-input':
+				case '-i', '-in', '-input', '--input':
 					isInputPath = true;
 					var temp = args[i + 1];
 					path = Path.directory(temp);
 					EXPORT = path;
-				// trace(path);
-				// if empty use current folder
-				// if not resume.json
-				// need a check
-				case '-out', '-o':
+				case '-o', '-out', '--out':
 					isOutputPath = true;
 					var temp = args[i + 1];
 					EXPORT = temp;
-				// writeAll();
 				default:
 					// trace("case '" + temp + "': trace ('" + temp + "');");
 			}
@@ -94,6 +89,8 @@ class Main {
 		var resumePath = Path.normalize(path + '/resume.json');
 
 		if (sys.FileSystem.exists(resumePath)) {
+			if (isDebug)
+				Sys.println('- found a resume.json file');
 			var str:String = sys.io.File.getContent(resumePath);
 			json = haxe.Json.parse(str);
 			// trace("json.basics.name: " + json.basics.name);
@@ -106,6 +103,9 @@ class Main {
 	// ____________________________________ write tools ____________________________________
 
 	function writeAll() {
+		if (isDebug)
+			Sys.println('- start setup');
+
 		isPandoc = isPandocInstalled();
 
 		prepareOut();
@@ -116,6 +116,9 @@ class Main {
 		writeTheme(); // current theme is splendor
 		flatTemp();
 		index();
+
+		if (isDebug)
+			Sys.println('[${TARGET}] CLI "${NAME}" DONE');
 	}
 
 	/**
@@ -123,6 +126,8 @@ class Main {
 	 * so you have a list of items in that folder
 	 */
 	function index() {
+		if (isDebug)
+			Sys.println('- create index html file');
 		var arr = sys.FileSystem.readDirectory(EXPORT);
 		var html = '<ul>\n';
 		for (i in 0...arr.length) {
@@ -165,17 +170,20 @@ ${html}
 	 * will build more
 	 */
 	function flatTemp() {
+		if (isDebug)
+			Sys.println('- create original resume.json flat html file');
 		var str = haxe.Resource.getString("htmlFlatTemplate");
 
 		var template = new haxe.Template(str);
 
+		var _v = (json.volunteer != null) ? json.volunteer : {};
 		var settings = {
 			css: haxe.Resource.getString("flatTheme"),
 			title: json.basics.name,
 			basics: json.basics,
 			profiles: json.basics.profiles,
 			work: json.work,
-			volunteer: json.volunteer,
+			volunteer: _v,
 			education: json.education,
 			awards: json.awards,
 			publications: json.publications,
@@ -192,6 +200,8 @@ ${html}
 	}
 
 	function writeTheme() {
+		if (isDebug)
+			Sys.println('- create theme html file');
 		var css = haxe.Resource.getString("themeSplendor");
 		switch (template) {
 			case 'flat':
@@ -233,7 +243,8 @@ ${html}
 	 * @return Bool
 	 */
 	function isPandocInstalled():Bool {
-		// Sys.println("Is Pandoc installed?");
+		if (isDebug)
+			Sys.println('- is Pandoc installed?');
 		var p:Process = new Process('pandoc', ['-v']);
 		var out = p.stdout.readAll().toString();
 		p.close();
@@ -252,6 +263,8 @@ ${html}
 	 * get `resume.json` and convert this into useable data
 	 */
 	function prepareOut() {
+		if (isDebug)
+			Sys.println('- prepare json file');
 		// collect all the first level names of the nodes
 		__arr = [];
 		for (varName in Reflect.fields(json)) {
@@ -263,6 +276,8 @@ ${html}
 	}
 
 	function writeTxt():Void {
+		if (isDebug)
+			Sys.println('- create txt file');
 		var str = '${json.basics.name}\n';
 		str += '${json.basics.label}\n';
 		str += '\n';
@@ -273,6 +288,8 @@ ${html}
 	}
 
 	function writeMarkdown() {
+		if (isDebug)
+			Sys.println('- create md file');
 		var str = '# ${json.basics.name}\n';
 		str += '## ${json.basics.label}\n';
 		str += '\n';
@@ -303,6 +320,8 @@ ${html}
 	 * Super simple template based upon Bootstrap and simple markdownconversion
 	 */
 	function writeSimpleHtml():Void {
+		if (isDebug)
+			Sys.println('- create simple html file');
 		var str = '<!doctype html>
 <html lang="en">
   <head>
@@ -336,6 +355,8 @@ ${html}
 	 * this is work in progress, it ends up as `resume-wip.html`
 	 */
 	function writeBasicTemplate() {
+		if (isDebug)
+			Sys.println('- create basic template');
 		var str = haxe.Resource.getString("htmlTemplate");
 		var template = new haxe.Template(str);
 
@@ -413,7 +434,8 @@ ${html}
 		}
 		// write the file
 		sys.io.File.saveContent(path + '/${filename}', content);
-		// trace('written file: ${path}/${filename}');
+		if (isDebug)
+			Sys.println('\t - written file: ${path}/${filename}');
 	}
 
 	// ____________________________________ help ____________________________________
