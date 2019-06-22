@@ -281,8 +281,8 @@
 						::releaseDate::
 					</span>
 				</h4>
-				<div class="website pull-right">
-					<a href="::website::"></a>
+				<div class="_website pull-right">
+					<a href="::website::">Read publication</a>
 				</div>
 				<div class="publisher">
 					<em>Published by</em>
