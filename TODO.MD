@@ -1,11 +1,13 @@
 # TODO
 
 - [x] init via terminal
-- [ ] `-in`
-- [ ] `-out`
-- [ ] `-template`
-- [ ] `-template`
-- [ ] bootstrap template
+- [x] bootstrap template
+- [x] `-in`
+- [x] `-out`
+- [x] `-template`
+- [ ] don't force everthing (awards/volenteer)
+- [ ] markdown link
+- [ ] markdown img
 
 
 ## servers
