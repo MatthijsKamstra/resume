@@ -116,9 +116,15 @@
 				<div class="col-sm-12">
 					<h4 class="strike-through">
 						<span>::company::</span>
+						::if (!endDate)::
+						<span class="date">
+							::startDate:: — current
+						</span>
+						::else::
 						<span class="date">
 							::startDate:: — ::endDate::
 						</span>
+						::end::
 					</h4>
 					<div class="website pull-right">
 						<a href="::website::">::website::</a>
@@ -129,12 +135,14 @@
 					<div class="summary">
 						<p>::summary::</p>
 					</div>
+					::if (!highlights)::
 					<h4>Highlights</h4>
 					<ul class="highlights">
 					::foreach highlights::
 						<li class="bullet">::__current__::</li>
 					::end::
 					</ul>
+					::end::
 				</div>
 			::end::
 			</div>
@@ -206,12 +214,14 @@
 				<div class="studyType">
 					::studyType::
 				</div>
+				::if (courses)::
 				<h4>Courses</h4>
 				<ul class="courses">
 				::foreach courses::
 					<li>::__current__::</li>
 				::end::
 				</ul>
+				::end::
 			</div>
 			::end::
 			</div>
