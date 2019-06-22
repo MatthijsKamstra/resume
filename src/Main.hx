@@ -85,15 +85,24 @@ class Main {
 					// trace("case '" + temp + "': trace ('" + temp + "');");
 			}
 		}
+		if (isDebug) {
+			Sys.println('\t-i ${path}');
+			Sys.println('\t-o ${EXPORT}');
+		}
 
+		if (!isInputPath)
+			return;
 		var resumePath = Path.normalize(path + '/resume.json');
 
 		if (sys.FileSystem.exists(resumePath)) {
 			if (isDebug)
-				Sys.println('- found a resume.json file');
+				Sys.println('- found a resume.json file at (${resumePath})');
 			var str:String = sys.io.File.getContent(resumePath);
 			json = haxe.Json.parse(str);
-			// trace("json.basics.name: " + json.basics.name);
+			if (isDebug) {
+				Sys.println('\t- name: ' + json.basics.name);
+				Sys.println('\t- label: ' + json.basics.label);
+			}
 			writeAll();
 		} else {
 			trace('ERROR: there is no spoon: $resumePath');
@@ -104,12 +113,13 @@ class Main {
 
 	function writeAll() {
 		if (isDebug)
-			Sys.println('- start setup');
+			Sys.println('- start setup:');
 
 		isPandoc = isPandocInstalled();
 
+		validateJson();
 		prepareOut();
-		writeTxt(); // `resume.txt`: ßfirst txt, because markdown modifice __txt (need to fix that)
+		writeTxt(); // `resume.txt`: first txt, because markdown modified __txt (need to fix that)
 		writeMarkdown(); // `resume.md`
 		writeSimpleHtml(); // bootrap and the markdowntohtml exprt in a container
 		writeBasicTemplate(); // working on a version that makes (WIP)
@@ -119,6 +129,40 @@ class Main {
 
 		if (isDebug)
 			Sys.println('[${TARGET}] CLI "${NAME}" DONE');
+	}
+
+	/**
+	 * Basics,Work,Education,Publications,Skills,Languages,Interests
+	 *
+	 * validate json, add if needed so templates won't fail
+	 */
+	function validateJson() {
+		// TODO [mck] check flatTemp function for more checks... might be better here
+		var str = '------ start validating json -----\n';
+		str += ' - basics: ${Reflect.hasField(json, 'basics')}\n';
+		str += ' - work: ${Reflect.hasField(json, 'work')}\n';
+		for (i in 0...json.work.length) {
+			var _work = json.work[i];
+			str += '   - highlights: ${Reflect.hasField(_work, 'highlights')}\n';
+			// make sure the resume.json has an empty array
+			if (!Reflect.hasField(_work, 'highlights')) {
+				Reflect.setField(_work, 'highlights', []);
+			}
+		}
+		str += ' - education: ${Reflect.hasField(json, 'education')}\n';
+		str += ' - skills: ${Reflect.hasField(json, 'skills')}\n';
+		str += ' - languages: ${Reflect.hasField(json, 'languages')}\n';
+		str += ' - volunteer: ${Reflect.hasField(json, 'volunteer')}\n';
+		// [mck] fixed it now in flatTemp
+		// if (!Reflect.hasField(json, 'volunteer')) {
+		// 	Reflect.setField(json, 'volunteer', []);
+		// }
+		str += ' - awards: ${Reflect.hasField(json, 'awards')}\n';
+		str += ' - publications: ${Reflect.hasField(json, 'publications')}\n';
+		str += ' - interests: ${Reflect.hasField(json, 'interests')}\n';
+		str += ' - references: ${Reflect.hasField(json, 'references')}\n';
+		str += '------ end validating json -----\n';
+		Sys.println(str);
 	}
 
 	/**
@@ -176,22 +220,36 @@ ${html}
 
 		var template = new haxe.Template(str);
 
-		var _v = (json.volunteer != null) ? json.volunteer : {};
+		// probably the basics of an resume
 		var settings = {
 			css: haxe.Resource.getString("flatTheme"),
 			title: json.basics.name,
 			basics: json.basics,
 			profiles: json.basics.profiles,
 			work: json.work,
-			volunteer: _v,
 			education: json.education,
-			awards: json.awards,
-			publications: json.publications,
 			skills: json.skills,
-			languages: json.languages,
-			interests: json.interests,
-			references: json.references,
+			languages: json.languages
 		};
+		// this might be a better way to manage haxe template, if it's there inject
+		if (Reflect.hasField(json, "volunteer")) {
+			Reflect.setField(settings, "volunteer", json.volunteer);
+		}
+		if (Reflect.hasField(json, "references")) {
+			Reflect.setField(settings, "references", json.references);
+		}
+		if (Reflect.hasField(json, "awards")) {
+			Reflect.setField(settings, "awards", json.awards);
+		}
+		if (Reflect.hasField(json, "publications")) {
+			Reflect.setField(settings, "publications", json.publications);
+		}
+		if (Reflect.hasField(json, "interests")) {
+			Reflect.setField(settings, "interests", json.interests);
+		}
+		// html ignores the json returns, so we need to convert them to breaks:
+		var str = json.basics.summary;
+		settings.basics.summary = str.replace('\n', '<br>');
 
 		var output = template.execute(settings);
 		// return output;
@@ -244,16 +302,18 @@ ${html}
 	 */
 	function isPandocInstalled():Bool {
 		if (isDebug)
-			Sys.println('- is Pandoc installed?');
+			Sys.println('- is Pandoc installed:');
 		var p:Process = new Process('pandoc', ['-v']);
 		var out = p.stdout.readAll().toString();
 		p.close();
 
 		if (out.indexOf('pandoc') != -1) {
-			// trace('You have pandoc installed!');
+			if (isDebug)
+				Sys.println('\t[x] yes, you have pandoc installed!');
 			return true;
 		} else {
-			trace('Visit pandoc.org to install!');
+			if (isDebug)
+				Sys.println('\t[x] no, visit pandoc.org to install!');
 			return false;
 		}
 		return false;
@@ -270,6 +330,9 @@ ${html}
 		for (varName in Reflect.fields(json)) {
 			__arr.push(capitalizeFirstLetter(varName));
 		}
+		if (isDebug)
+			Sys.println('\t | ${__arr}');
+
 		// reset __txt and unwrap
 		__txt = '';
 		unwrapJson(json, '');
@@ -493,7 +556,6 @@ ${html}
 	}
 
 	// ____________________________________ starting point ____________________________________
-
 	static public function main():Void {
 		var app = new Main(Sys.args());
 	}
