@@ -127,7 +127,10 @@ class Main {
 		flatTemp();
 		index();
 
-		Sys.println(__template);
+		// extremely hacky way to generate a template
+		// writeFile(EXPORT, '_hxtemplate.mtt', __template);
+
+		// trace(__arr);
 
 		if (isDebug)
 			Sys.println('[${TARGET}] CLI "${NAME}" DONE');
@@ -449,6 +452,7 @@ ${html}
 	}
 
 	// ____________________________________ tools ____________________________________
+	// hacky way to generate a haxe template file...
 	var __template = '<!-- haxe template -->\n';
 	var __storeTemp = '';
 
