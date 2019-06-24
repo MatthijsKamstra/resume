@@ -1,0 +1,144 @@
+<!-- haxe template -->
+
+<!-- basic -->
+
+::basics.name::
+::basics.label::
+::basics.picture::
+::basics.email::
+::basics.phone::
+::basics.website::
+::basics.summary::
+
+<!-- basic.location -->
+
+	::basics.location.address::
+	::basics.location.postalCode::
+	::basics.location.city::
+	::basics.location.countryCode::
+	::basics.location.region::
+
+<!-- basic.profiles -->
+
+::if (basics.profiles)::
+profiles
+	::foreach (basics.profiles)::
+		::network::
+		::if( username)::
+			::username::
+		::end::
+		::if (url)::
+			::url::
+		::end::
+	::end::
+::end::
+
+::foreach (work)::
+work
+	::company::
+	::position::
+	::website::
+	::startDate::
+	::endDate::
+	::summary::
+	::if (highlights)::
+		::foreach (highlights)::
+			::__current::
+		::end::
+	::end::
+::end::
+
+::foreach (education)::
+education
+	::institution::
+	::area::
+	::studyType::
+	::startDate::
+	::endDate::
+	::gpa::
+	::if (courses)::
+		::foreach (courses)::
+			::__current::
+		::end::
+	::end::
+::end::
+
+
+::if (volunteer)::
+volunteer
+	::foreach (volunteer)::
+		::organization::
+		::position::
+		::website::
+		::startDate::
+		::endDate::
+		::summary::
+		::if (highlights)::
+			::foreach (highlights)::
+				::__current::
+			::end::
+		::end::
+	::end::
+::end::
+
+
+::if (awards)::
+awards
+	::foreach (awards)::
+		::title::
+		::date::
+		::awarder::
+		::summary::
+	::end::
+::end::
+
+::if (publications)::
+publications
+	::foreach (publications)::
+		::name::
+		::publisher::
+		::releaseDate::
+		::website::
+		::summary::
+	::end::
+::end::
+
+::if (skills)::
+skills
+	::foreach (skills)::
+		::name::
+		::level::
+		::if (keywords)::
+			::foreach (keywords)::
+				::__current__::
+			::end::
+		::end::
+	::end::
+::end::
+
+
+::if (languages)::
+language
+	::foreach (languages)::
+		::language::
+		::fluency::
+	::end::
+::end::
+
+::if (interests)::
+interests
+	::foreach (interests)::
+		::name::
+		::foreach (keywords)::
+			::__current::
+		::end::
+	::end::
+::end::
+
+::if (references)::
+reference
+	::foreach (references)::
+		::name::
+		::reference::
+	::end::
+::end::
