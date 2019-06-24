@@ -1,12 +1,12 @@
 # Resume
 
-If you search for "resume" on Github you will see a lot of repos that covers this problem:  **How to create a resume / CV / Curriculum Vitae**.
+If you search for ["resume"](https://www.google.com/search?q=resume%20site%3Agithub.com&oq=gitub&) on [Github](https://github.com/search?q=resume) you will see a lot of repos that covers this problem:  **How to create a resume / CV / Curriculum Vitae**.
 
 I'm not different; I like to reinvent the wheel (because my wheel is rounder!)
 
-But I will learn from others: in my case from https://jsonresume.org/>.
+But I will learn from others: in my case from https://jsonresume.org/.
 
-This project is `resume.json` but done with [Haxe](http://www.haxe.org) (readmore [here(README_HAXE.MD)). Because Haxe transpiles to a couple of System targets I am not limited to a specific language.
+This project is `resume.json` but done with [Haxe](http://www.haxe.org) (readmore [here](README_HAXE.MD)). Because Haxe transpiles to a couple of System targets I am not limited to a specific language.
 
 Language that I cover (with Haxe):
 
@@ -18,7 +18,7 @@ Language that I cover (with Haxe):
 - cs (C#)
 - java
 
-This is a [Haxe](http://www.haxe.org) project, read more about it in the [README_HAXE.MD](README_HAXE.MD)!
+
 
 ## Categories
 
@@ -119,20 +119,7 @@ So let's start a Haxe system variant for it.
 - <https://github.com/jsonresume>
 - <http://www.w3schools.com/json/>
 
-## More info
-
-We have an `.json` example, so you should check that out as well.
-
-- [About json example](../08json/about.md)
-- [The json example](../08json/example.md)
 
 # Haxe project
 
-This is an example Haxe project scaffolded by Visual Studio Code.
-
-Without further changes the structure is following:
-
- * `src/Main.hx`: Entry point Haxe source file
- * `build.hxml`: Haxe command line file used to build the project
- * `README.md`: This file
-
+This is a [Haxe](http://www.haxe.org) project, read more about it in the [README_HAXE.MD](README_HAXE.MD)!
