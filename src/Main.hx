@@ -127,6 +127,8 @@ class Main {
 		flatTemp();
 		index();
 
+		Sys.println(__template);
+
 		if (isDebug)
 			Sys.println('[${TARGET}] CLI "${NAME}" DONE');
 	}
@@ -139,30 +141,44 @@ class Main {
 	function validateJson() {
 		// TODO [mck] check flatTemp function for more checks... might be better here
 		var str = '------ start validating json -----\n';
-		str += ' - basics: ${Reflect.hasField(json, 'basics')}\n';
-		str += ' - work: ${Reflect.hasField(json, 'work')}\n';
+		str += '${isChecked(json, 'basics')} basics: ${Reflect.hasField(json, 'basics')}\n';
+		str += '${isChecked(json, 'work')} work: ${Reflect.hasField(json, 'work')}\n';
 		for (i in 0...json.work.length) {
 			var _work = json.work[i];
-			str += '   - highlights: ${Reflect.hasField(_work, 'highlights')}\n';
+			str += '  ${isChecked(_work, 'highlights')} highlights: ${Reflect.hasField(_work, 'highlights')}\n';
 			// make sure the resume.json has an empty array
 			if (!Reflect.hasField(_work, 'highlights')) {
 				Reflect.setField(_work, 'highlights', []);
 			}
 		}
-		str += ' - education: ${Reflect.hasField(json, 'education')}\n';
-		str += ' - skills: ${Reflect.hasField(json, 'skills')}\n';
-		str += ' - languages: ${Reflect.hasField(json, 'languages')}\n';
-		str += ' - volunteer: ${Reflect.hasField(json, 'volunteer')}\n';
+		str += '${isChecked(json, 'education')} education: ${Reflect.hasField(json, 'education')}\n';
+		str += '${isChecked(json, 'skills')} skills: ${Reflect.hasField(json, 'skills')}\n';
+		str += '${isChecked(json, 'languages')} languages: ${Reflect.hasField(json, 'languages')}\n';
+		str += '${isChecked(json, 'volunteer')} volunteer: ${Reflect.hasField(json, 'volunteer')}\n';
 		// [mck] fixed it now in flatTemp
 		// if (!Reflect.hasField(json, 'volunteer')) {
 		// 	Reflect.setField(json, 'volunteer', []);
 		// }
-		str += ' - awards: ${Reflect.hasField(json, 'awards')}\n';
-		str += ' - publications: ${Reflect.hasField(json, 'publications')}\n';
-		str += ' - interests: ${Reflect.hasField(json, 'interests')}\n';
-		str += ' - references: ${Reflect.hasField(json, 'references')}\n';
+		str += '${isChecked(json, 'awards')} awards: ${Reflect.hasField(json, 'awards')}\n';
+		str += '${isChecked(json, 'publications')} publications: ${Reflect.hasField(json, 'publications')}\n';
+		str += '${isChecked(json, 'interests')} interests: ${Reflect.hasField(json, 'interests')}\n';
+		str += '${isChecked(json, 'references')} references: ${Reflect.hasField(json, 'references')}\n';
 		str += '------ end validating json -----\n';
 		Sys.println(str);
+	}
+
+	/**
+	 * ahhh I really don't need this, but it is nice
+	 * @param json
+	 * @param field
+	 * @return String
+	 */
+	function isChecked(json:Dynamic, field:String):String {
+		if (!Reflect.hasField(json, field)) {
+			return '- [ ]';
+		} else {
+			return '- [x]';
+		}
 	}
 
 	/**
@@ -216,10 +232,9 @@ ${html}
 	function flatTemp() {
 		if (isDebug)
 			Sys.println('- create original resume.json flat html file');
+
 		var str = haxe.Resource.getString("htmlFlatTemplate");
-
 		var template = new haxe.Template(str);
-
 		// probably the basics of an resume
 		var settings = {
 			css: haxe.Resource.getString("flatTheme"),
@@ -250,10 +265,8 @@ ${html}
 		// html ignores the json returns, so we need to convert them to breaks:
 		var str = json.basics.summary;
 		settings.basics.summary = str.replace('\n', '<br>');
-
+		// templat
 		var output = template.execute(settings);
-		// return output;
-		// trace(output);
 		writeFile(EXPORT, 'resume-flat.html', output);
 	}
 
@@ -371,6 +384,7 @@ ${html}
 		__txt = __txt.replace(': ', ':** '); // create bold in combintaion with previous replace
 
 		// picture??? ![name](path)
+		// link [name](path)
 
 		str += __txt;
 
@@ -435,6 +449,8 @@ ${html}
 	}
 
 	// ____________________________________ tools ____________________________________
+	var __template = '<!-- haxe template -->\n';
+	var __storeTemp = '';
 
 	function unwrapJson(json:Dynamic, ?tab:String = '\t') {
 		for (varName in Reflect.fields(json)) {
@@ -444,6 +460,9 @@ ${html}
 			switch (Type.typeof(Reflect.field(json, varName))) {
 				case TObject:
 					__txt += '${tab}${capitalizeFirstLetter(varName)}: \n';
+					__template += '${tab}::if ${varName}::\n';
+					__template += '${tab}::${varName}::\n';
+					__storeTemp = '${varName}.';
 					// deeper into the rabit hole
 					// trace('object : ${varName}');
 					unwrapJson(Reflect.field(json, varName), tab + '\t');
@@ -451,12 +470,20 @@ ${html}
 				case TClass(String):
 					// trace('${tab}string : ${varName} : ${Reflect.field(json, varName)}');
 					__txt += '${tab}${capitalizeFirstLetter(varName)}: ${Reflect.field(json, varName)}\n';
+					__template += '${tab}::${__storeTemp}${varName}::\n';
+					__storeTemp = '';
 
+				// __storeTemp = '';
 				case TClass(Array):
 					__txt += '${tab}${capitalizeFirstLetter(varName)}: \n';
+					// __template += '${tab}::${__storeTemp}${varName}::\n';
 					// trace('array : ${varName}');
 					// trace('array : ${varName} : ${Reflect.field(json, varName)}');
 					var arr:Array<Dynamic> = Reflect.field(json, varName);
+					__template += '${tab}::foreach (${varName})::\t${arr.length}\n';
+
+					// __storeTemp = '${varName}.';
+					__storeTemp = '';
 					// trace('array: ${varName} :  ${arr.length}');
 					for (i in 0...arr.length) {
 						var _json = haxe.Json.parse(haxe.Json.stringify(arr[i]));
