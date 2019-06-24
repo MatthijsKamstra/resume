@@ -8,7 +8,6 @@
 -dce full
 -D js-es=6
 
-
 # empty resume.json
 -resource src/assets/resume.json@resumeJson
 # first attempt html

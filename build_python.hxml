@@ -20,7 +20,6 @@
 -resource src/assets/github-dashed.css@themeDashed
 -resource src/assets/github-killercup.css@themeKillercup
 
-
 --next
 
 # run application

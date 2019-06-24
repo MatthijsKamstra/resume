@@ -10,7 +10,6 @@
 # -debug
 -dce full
 
-
 # empty resume.json
 -resource src/assets/resume.json@resumeJson
 # first attempt html
