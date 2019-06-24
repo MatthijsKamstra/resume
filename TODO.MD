@@ -5,7 +5,7 @@
 - [x] `-in`
 - [x] `-out`
 - [x] `-template`
-- [ ] don't force everthing (awards/volenteer)
+- [x] don't force everthing (awards/volenteer)
 - [ ] markdown link
 - [ ] markdown img
 
@@ -17,8 +17,8 @@
 - [ ] https://github.com/indexzero/http-server
 
 ```bash
- npm install http-server -g
- ```
+npm install http-server -g
+```
 
 ```bash
 http-server [path] [options]
