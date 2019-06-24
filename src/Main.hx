@@ -225,7 +225,7 @@ ${html}
   </body>
 </html>';
 
-		writeFile(DOCS, 'index.html', temp);
+		writeFile(EXPORT, 'index.html', temp);
 	}
 
 	/**
