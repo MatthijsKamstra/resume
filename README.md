@@ -22,6 +22,7 @@ This is a [Haxe](http://www.haxe.org) project, read more about it in the [README
 
 ## Categories
 
+Because I'm bluntly copying the data (and probably research) from `resume.json` project, I have these categories I work with:P
 
 - Basics
 - Work
@@ -33,6 +34,8 @@ This is a [Haxe](http://www.haxe.org) project, read more about it in the [README
 - Languages
 - Interests
 - References
+
+Check the [`resume.md`](docs/resume.md) for more details
 
 
 
