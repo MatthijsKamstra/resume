@@ -1,12 +1,12 @@
 # Resume
 
-If you search for resume on Github you will see a lot of repos that covers this problem:  **How to create a resume / CV / Curriculum Vitae**.
+If you search for "resume" on Github you will see a lot of repos that covers this problem:  **How to create a resume / CV / Curriculum Vitae**.
 
 I'm not different; I like to reinvent the wheel (because my wheel is rounder!)
 
 But I will learn from others: in my case from https://jsonresume.org/>.
 
-This project is `resume.json` but done with Haxe. Because Haxe transpiles to a couple of System targets I am not limited to a specific language.
+This project is `resume.json` but done with [Haxe](http://www.haxe.org) (readmore [here(README_HAXE.MD)). Because Haxe transpiles to a couple of System targets I am not limited to a specific language.
 
 Language that I cover (with Haxe):
 
@@ -20,11 +20,27 @@ Language that I cover (with Haxe):
 
 This is a [Haxe](http://www.haxe.org) project, read more about it in the [README_HAXE.MD](README_HAXE.MD)!
 
+## Categories
+
+
+- Basics
+- Work
+- Volunteer
+- Education
+- Awards
+- Publications
+- Skills
+- Languages
+- Interests
+- References
+
+
+
 ## Export
 
 - [x] markdown (resume.md)
 - [x] text (resume.txt)
-- [ ] html (resume.html)
+- [x] html (resume.html)
 
 But install [pandoc](https://pandoc.org/) and you can convert it to almost any filetype
 
