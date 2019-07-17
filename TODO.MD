@@ -8,6 +8,7 @@
 - [x] don't force everthing (awards/volenteer)
 - [ ] markdown link
 - [ ] markdown img
+- [ ] make sure \n is converted to <br> and other simple json
 
 
 ## servers
@@ -25,7 +26,8 @@ http-server [path] [options]
 ```
 
 # package.json ???
-  "serve": "http-server public/ -c-1"
+
+> "serve": "http-server public/ -c-1"
 
 ## get all targets working
 
