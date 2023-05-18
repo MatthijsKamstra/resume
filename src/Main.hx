@@ -1,17 +1,19 @@
 package;
 
+import AST;
+import AST.ResumeObjObj;
 import haxe.io.Path;
 import sys.io.Process;
-import AST;
 
 using StringTools;
 
 class Main {
 	/**
-	 * 0.0.2 	working on the cli version
 	 * 0.0.1 	initial release
+	 * 0.0.2 	working on the cli version
+	 * 0.0.3 	update code with fresh eyes
 	 */
-	var VERSION:String = '0.0.2';
+	var VERSION:String = '0.0.3';
 
 	var NAME:String = 'Resume-hx';
 
@@ -24,10 +26,12 @@ class Main {
 	var EXPORT:String = Util.exportPath(); // folder to generate files in (in this case `www` folder from github )
 	var DOCS:String = Util.docsPath(); // folder to generate files in (in this case `docs` folder from github )
 	var CWD:String = Sys.getCwd(); // active folder
+
 	// wip
 	var __txt:String = '';
 	var __md:String = '';
 	var __arr:Array<String> = [];
+
 	// template settings
 	var settings:Dynamic; // should make this a typedef
 	var template = 'splendor'; // default theme
@@ -37,6 +41,16 @@ class Main {
 	var isDebug:Bool = false;
 
 	public function new(?args:Array<String>) {
+		// if (Sys.getCwd().indexOf('bin/') != -1) {
+		// 	TARGET = Sys.getCwd().split('bin/')[1].split('/')[0]; // yep, that works in this folder structure
+		// 	EXPORT = Path.normalize(Sys.getCwd().split('bin/')[0] + '/docs/${TARGET}'); // normal situation this would we just the `www` or `docs` folder
+		// 	ASSETS = Path.normalize(Sys.getCwd().split('bin/')[0] + '/assets/');
+		// } else {
+		// 	TARGET = 'eval'; // interp
+		// 	EXPORT = Path.normalize(Sys.getCwd() + '/docs/${TARGET}'); // normal situation this would we just the `www` or `docs` folder
+		// 	ASSETS = Path.normalize(Sys.getCwd() + '/assets/');
+		// }
+
 		// trace('${TARGET}, \n${EXPORT}, \n${DOCS}, \n${ASSETS}, \n${CWD}');
 		Sys.println('');
 		trace('[${TARGET}] Working with resume.json');
@@ -59,25 +73,25 @@ class Main {
 		for (i in 0...args.length) {
 			var temp = args[i];
 			switch (temp) {
-				case '-v', '-version', '--version':
+				case '-v', '--version':
 					Sys.println('version: ' + VERSION);
-				case '-d', '-debug', '--debug':
+				case '-d', '--debug':
 					isDebug = true;
-				case '-h', '-help', '--help':
+				case '-h', '--help':
 					showHelp();
-				case '-t', '-theme', 'theme', 'template', '-template':
+				case '-t', '--theme', '--template':
 					template = args[i + 1];
-				case '-init', 'init':
+				case '-c', '--create':
 					Sys.println('[${TARGET}] create an empty _resume.json');
 					// write a "empty" resume in the current folder
 					writeFile(CWD, '_resume.json', haxe.Resource.getString("resumeJson"));
 					return;
-				case '-i', '-in', '-input', '--input':
+				case '-i', '--input':
 					isInputPath = true;
 					var temp = args[i + 1];
 					path = Path.directory(temp);
 					EXPORT = path;
-				case '-o', '-out', '--out':
+				case '-o', '--out':
 					isOutputPath = true;
 					var temp = args[i + 1];
 					EXPORT = temp;
@@ -90,13 +104,15 @@ class Main {
 			Sys.println('\t-o ${EXPORT}');
 		}
 
-		if (!isInputPath)
+		if (!isInputPath) {
 			return;
+		}
 		var resumePath = Path.normalize(path + '/resume.json');
 
 		if (sys.FileSystem.exists(resumePath)) {
-			if (isDebug)
+			if (isDebug) {
 				Sys.println('- found a resume.json file at (${resumePath})');
+			}
 			var str:String = sys.io.File.getContent(resumePath);
 			json = haxe.Json.parse(str);
 			if (isDebug) {
@@ -132,8 +148,9 @@ class Main {
 
 		// trace(__arr);
 
-		if (isDebug)
+		if (isDebug) {
 			Sys.println('[${TARGET}] CLI "${NAME}" DONE');
+		}
 	}
 
 	/**
@@ -577,10 +594,15 @@ ${html}
 		str += 'How to use (${TARGET}):\n';
 		str += '${correctCLI(TARGET)} -out\n';
 		str += '\n';
-		str += '	-version / -v   : version number\n';
-		str += '	-help / -h      : show this help\n';
-		str += '	-folder / -cd   : path to project folder\n';
-		str += '	-out / -o       : write readme\n';
+		str += '	--create / -c	: create an empty _resume.json\n';
+		str += '	--version / -v	: version number\n';
+		str += '	--debug / -d	: use debug when generation\n';
+		str += '	--help / -h	: show this help\n';
+		str += '	--theme / -t	: use theme\n';
+		str += '	--folder / -cd	: path to project folder\n';
+		str += '	--input / -i	: use as source resume.json\n';
+		str += '	--out / -o	: write readme\n';
+
 		str += '\n';
 		str += '------------------------------------------------\n';
 		Sys.println(str);

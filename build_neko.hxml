@@ -1,6 +1,6 @@
--cmd rm bin/neko/main.n
+# -cmd rm bin/neko/main.n
 
---next
+# --next
 
 -lib markdown
 

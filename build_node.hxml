@@ -7,6 +7,7 @@
 # -debug
 -dce full
 -D js-es=6
+-D no-deprecation-warnings
 
 # empty resume.json
 -resource src/assets/resume.json@resumeJson

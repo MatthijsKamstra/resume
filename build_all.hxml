@@ -1,9 +1,8 @@
 -cmd echo "  ├─┬ Start building targets"
 
 
-# ReferenceError: sys is not defined
-# -cmd echo "  │ ├── node"
-# -cmd haxe build_node.hxml
+-cmd echo "  │ ├── node"
+-cmd haxe build_node.hxml
 -cmd echo "  │ ├── python"
 -cmd haxe build_python.hxml
 
@@ -21,8 +20,7 @@
 -cmd echo "  │ ├── cs"
 -cmd haxe build_cs.hxml
 
-# Exception in thread "main" Haxe Exception: not implemented
-# -cmd echo "  │ ├── java"
-# -cmd haxe build_java.hxml
+-cmd echo "  │ ├── java"
+-cmd haxe build_java.hxml
 
 -cmd echo "  └── Finished building targets"

@@ -1,6 +1,6 @@
 # Resume
 
-If you search for ["resume"](https://www.google.com/search?q=resume%20site%3Agithub.com&oq=gitub&) on [Github](https://github.com/search?q=resume) you will see a lot of repos that covers this problem:  **How to create a resume / CV / Curriculum Vitae**.
+If you search for ["resume"](https://www.google.com/search?q=resume%20site%3Agithub.com&oq=gitub&) on [Github](https://github.com/search?q=resume) you will see a lot of repos that covers this problem: **How to create a resume / CV / Curriculum Vitae**.
 
 I'm not different; I like to reinvent the wheel (because my wheel is rounder!)
 
@@ -18,8 +18,6 @@ Language that I cover (with Haxe):
 - cs (C#)
 - java
 
-
-
 ## Categories
 
 Because I'm bluntly copying the data (and probably research) from `resume.json` project, I have these categories I work with:P
@@ -36,8 +34,6 @@ Because I'm bluntly copying the data (and probably research) from `resume.json` 
 - References
 
 Check the [`resume.md`](docs/resume.md) for more details
-
-
 
 ## Export
 
@@ -72,22 +68,19 @@ dropin markdown converted html css templates
 - [sakura](https://github.com/oxalorg/sakura)
 - [buttondown](https://github.com/ryangray/buttondown)
 - [markdowncss](https://github.com/markdowncss)
-	- [slendor](https://github.com/markdowncss/splendor)
-	- [modest](https://github.com/markdowncss/modest)
-	- [air](https://github.com/markdowncss/air)
+  - [slendor](https://github.com/markdowncss/splendor)
+  - [modest](https://github.com/markdowncss/modest)
+  - [air](https://github.com/markdowncss/air)
 - [killercup](https://gist.github.com/killercup/5917178)
 - [dashed](https://gist.github.com/dashed/6714393)
-
 
 pandoc html via markdown
 
 - [something](https://sdsawtelle.github.io/blog/output/simple-markdown-resume-with-pandoc-and-wkhtmltopdf.html)
 
-
 ```bash
 pandoc --standalone --self-contained --table-of-contents --toc-depth=6 -t html5 --css=<css.css> <markdown.md> -o <html.html>
 ```
-
 
 ## About resume.json
 
@@ -98,7 +91,6 @@ A couple years back I ran into this project <https://jsonresume.org/>
 
 It seemed a good idea but I had no use for it.
 
-
 Recently a colleague of mine needed a resume and I remembered this.
 Now the project seems dead and most of the website is not working.
 
@@ -106,12 +98,10 @@ I still think it's a great idea, so I wanted to experiment with it.
 
 After working with it, I only can say that it's a good idea. But currently it doesn't work properly.
 
-
 Currently it's written in node.js and JavaScript.
 
 We can probably do that better with Haxe!
 So let's start a Haxe system variant for it.
-
 
 ## Source
 
@@ -119,7 +109,26 @@ So let's start a Haxe system variant for it.
 - <https://github.com/jsonresume>
 - <http://www.w3schools.com/json/>
 
-
-# Haxe project
+## Haxe project
 
 This is a [Haxe](http://www.haxe.org) project, read more about it in the [README_HAXE.MD](README_HAXE.MD)!
+
+## Reminder
+
+- `_doc.hxml`
+- `_test.hxml`
+- `build.hxml`
+
+## build files
+
+use `build_all.hxml` to build all targets,
+
+build for specific targets use:
+
+- `build_cpp.hxml`
+- `build_java.hxml`
+- `build_neko.hxml`
+- `build_python.hxml`
+- `build_cs.hxml`
+- `build_lua.hxml`
+- `build_node.hxml`
