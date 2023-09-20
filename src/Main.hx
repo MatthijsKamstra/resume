@@ -86,7 +86,7 @@ class Main {
 					// write a "empty" resume in the current folder
 					writeFile(CWD, '_resume.json', haxe.Resource.getString("resumeJson"));
 					return;
-				case '-i', '--input':
+				case '-i', '--in':
 					isInputPath = true;
 					var temp = args[i + 1];
 					path = Path.directory(temp);
@@ -600,7 +600,7 @@ ${html}
 		str += '	--help / -h	: show this help\n';
 		str += '	--theme / -t	: use theme\n';
 		str += '	--folder / -cd	: path to project folder\n';
-		str += '	--input / -i	: use as source resume.json\n';
+		str += '	--in / -i	: use as source resume.json\n';
 		str += '	--out / -o	: write readme\n';
 
 		str += '\n';
